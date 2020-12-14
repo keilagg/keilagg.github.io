@@ -1,3 +1,6 @@
-# keilagg.github.io
+# Keila González-Gómez
 
-This is a page with my detailed learning journey from civil engineer go GIS data scientist
+Hi! I am a Civil engineer with a master’s degree in Geodesy and Cartography. I'm also a geospatial data analyst enthusiast and I am finishing my PhD in Civil Engineering Systems. I 
+
+Currently I am a researcher at Universidad Politécnica de Madrid (Spain) and Universidad Autónoma de Santo Domingo (Dominican Republic).
+
