@@ -235,8 +235,8 @@ a:hover {
 }
 #head img.img-circle {
   display: block;
-  width: 180px;
-  height: 166px;
+  width: 260px;
+  height: 260px;
   overflow: hidden;
   border: 5px solid rgba(0, 0, 0, 0.05);
   margin: 0 auto;
