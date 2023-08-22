@@ -94,17 +94,24 @@
 						
 						<p style="text-align:justify;">
 							
-								The Ministry of Public Health and Social Assistance of the Dominican Republic publishes daily data on new COVID-19 cases, cumulated cases and more. These are aggregated by province and available to download.
+							The Ministry of Public Health and Social Assistance of the Dominican Republic publishes daily data on new COVID-19 
+							cases, cumulated cases, and more. These are aggregated by province and available for download.
+
+							The steps carried out to get the map are described below. First, the actions were carried out using Pandas, 
+							and later the mapping using ArcGIS PRO.
+							
 
 							<p style="font-size:18px;text-align:left;">Data wrangling</p>
 							<ol style="text-align:justify;">
 								<li>Excel:</li>
-								Data were obtained in xls files I inspected them visually using excel and exported them to csv so as to do the wrangling and cleaning using pandas.
+								Data were obtained in xls files. 
+								I inspected them visually using Excel and exported them to CSV for wrangling and cleaning using pandas.
 								<li>Pandas:</li>
 									<ul>
-										<li> Import CSV to pandas setting up an encoding that would recognize the ‘ñ’ letter and create the data frame.</li>
-										<li> Further inspection of the data using panda's functions: shape, info, head, tails and so on. With that inspection the cleaning and tiding required by the data became clear. </li>
-										<li> Cleaning required elimination of null values or invalid ones (e.g., negative values for positive cases). Some text data was casted to date type and int. </li>
+										<li> Import CSV to pandas setting up an encoding that would recognize the 'ñ' letter and create the data frame.</li>
+										<li> Further inspection of the data using panda's functions: shape, info, head, tails, etc. With that inspection, 
+											the cleaning and tidying required by the data became evident. </li>
+										<li> Cleaning required the elimination of null values or invalid ones (e.g., negative values for positive cases). Some text data was cast to date type and int.  </li>
 										<li>The table as it was imported did not comply with the ‘Tidy data’ requirements as some observational units were columns and not rows. This was solved using the ‘melt’ tool. This table had the dates as columns instead of an attribute of each province, after the transformation the table became larger in rows but coherent with what ArcGIS and any other program would expect.As the name of the provinces did not include coordinates, these were added using the library <a href="https://geocoder.readthedocs.io/">Geocoder</a> and the <a href="https://geocoder.readthedocs.io/">OpenStreetMap</a> API. Before that the name of the country was concatenated to the provinces names to avoid toponym confusion. </li>
 										</ul>
 							</ol>
