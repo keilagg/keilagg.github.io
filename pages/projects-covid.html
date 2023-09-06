@@ -87,52 +87,80 @@
  						<p style="font-size:28px;text-align:center">Journey to random animations in ArcGIS Pro</p>
 					</header> 
 					<div class="entry-content">
-						<p><video width="700" controls>
-  							<source src="assets/videos/Nuevos_casos_blue2.mp4" type="video/mp4">
-  							Your browser does not support HTML video.
-						</video> </p>
 						
+						<figure>
+							<video width="700" controls>
+  								<source src="assets/videos/Nuevos_casos_blue2.mp4" type="video/mp4">
+  								Your browser does not support HTML video.
+							</video>
+							<figcaption>COVID-19 cases in the Dominican Republic.</figcaption>
+						</figure>
+
+						<h3> Introduction</h3>
 						<p style="text-align:justify;">
 							
-							The Ministry of Public Health and Social Assistance of the Dominican Republic publishes daily data on new COVID-19 
-							cases, cumulated cases, and more. These are aggregated by province and available for download.
+							Mapping tabulated data with a spatial component is always a good idea. 
+							It combines our underlying knowledge about the territory with the available information 
+							(not saying this could not work against us), easing the insight generation process.
+							<br>
+							<br>
+							The Ministry of Public Health and Social Assistance of the Dominican Republic 
+							publishes daily data on new COVID-19 cases, cumulated cases, and more. 
+							These are aggregated by province and available for download as xls files. 
+							We decided to map them and see how the virus spread around the country while 
+							keeping the temporal component. The latter would require creating a 
+							dynamic map and publishing it as a video, a task I had not done before.
+							<br>
+							<br>
+							The steps carried out to get the map are described below. First, a few wrangling 
+							steps were carried out using Pandas, and later, the mapping using ArcGIS PRO.</p>
 
-							The steps carried out to get the map are described below. First, the actions were carried out using Pandas, 
-							and later the mapping using ArcGIS PRO.
-							
-
-							<p style="font-size:18px;text-align:left;">Data wrangling</p>
+							<h3> Data wrangling</h3>
 							<ol style="text-align:justify;">
 								<li>Excel:</li>
-								Data were obtained in xls files. 
-								I inspected them visually using Excel and exported them to CSV for wrangling and cleaning using pandas.
+								I visually inspected the Excel files first and then exported them to 
+								CSV for wrangling and cleaning using pandas.
 								<li>Pandas:</li>
 									<ul>
-										<li> Import CSV to pandas setting up an encoding that would recognize the 'ñ' letter and create the data frame.</li>
-										<li> Further inspection of the data using panda's functions: shape, info, head, tails, etc. With that inspection, 
+										<li>Imported the CSV files to pandas, set up an encoding to recognize the 'ñ' letter, and created the data frame.</li>
+										<li>Further inspection of the data using panda's functions: shape, info, head, tails, etc. With that inspection, 
 											the cleaning and tidying required by the data became evident. </li>
-										<li> Cleaning required the elimination of null values or invalid ones (e.g., negative values for positive cases). Some text data was cast to date type and int.  </li>
-										<li>The table as it was imported did not comply with the ‘Tidy data’ requirements as some observational units were columns and not rows. This was solved using the ‘melt’ tool. This table had the dates as columns instead of an attribute of each province, after the transformation the table became larger in rows but coherent with what ArcGIS and any other program would expect.As the name of the provinces did not include coordinates, these were added using the library <a href="https://geocoder.readthedocs.io/">Geocoder</a> and the <a href="https://geocoder.readthedocs.io/">OpenStreetMap</a> API. Before that the name of the country was concatenated to the provinces names to avoid toponym confusion. </li>
+										<li>The cleaning process required the elimination of null values or invalid ones 
+											(e.g., negative values for positive cases). Some text data was cast to date type and int. </li>
+										<li>The table shape did not comply with the ‘Tidy data’ requirements, as some observational 
+											units were columns and not rows. The dates were stored in columns instead of an attribute of each province. 
+											The table was reshaped from <i>long</i> format to <i>wide </i> using the ‘melt’ tool. 
+											After the transformation, the table became larger in rows but coherent with what ArcGIS 
+											and any other program would expect.</li>
+										<li>As the names of the provinces did not include coordinates, these were added using the library 
+											<a href="https://geocoder.readthedocs.io/">Geocoder</a> and the <a href="https://geocoder.readthedocs.io/">OpenStreetMap</a> API. 
+											Before that, the country's name was concatenated with the provinces' names to avoid toponym confusion.</li>
 										</ul>
-							</ol>
-							<p style="font-size:18px;text-align:left;">Animation in ArcGIS PRO</p>
-								<ul>
+							
+								<li>Animation in ArcGIS PRO</li>
+									<ul>
 										<li> Import tables as a point feature class using from XYtotable</li>
 										<li> Download a layer with the provinces of the Dominican Republic. This was done using the <a href="https://www.one.gob.do/"> National Statistics Office (Dominican Republic)</a> page. These two layers were joined spatially. The union was one to many. </li>
-										<li> As the points were all located in the centroid of each polygon, the tool CreateRandom Points was used to create the cases within each polygon for each date. These points were created as separate points and not multipoints and were stored in a different feature class layer. This was then joined to the layer with the dates. Before that the tool Dissolve was used to join them into mutipoints (this option was not selected in the create random points tool because then points would lose their ID and the union was not going to be possible).</li>
+										<li> As the points were all located in the centroid of each polygon, the tool CreateRandom Points was used to create the cases within each polygon for each date. These points were created as separate points, not multipoints, and stored in a different feature class layer. This was then joined to the layer with the dates. Before that, the tool Dissolve was used to join them into multipoint (this option was not selected in the create random points tool because then points would lose their ID, and the union would not be possible).</li>
 										<li> Go to layer properties and activate the time variable with the field storing the dates.</li>
 										<li> Next was to create the animation. In the view Tab, animation group --> Create animation </li>
 									</ul>
+								</ol>
 							<blockquote>
 							This was my first time doing animations using ArcGIS PRO, and this is better explained with images:
 							</blockquote>
-
-							<p><img alt="" src="assets/images/animation.png"></p>
-
+							<figure>
+								<img alt="" src="assets/images/animation.png">
+								<figcaption>Fig.1 - ArcGIS Pro time tab.</figcaption>
+							</figure>
+							<br>
 							<p style="text-align:justify;"> First verify that the time interval is the one intended (it should take them from the date field), then set the proper time step interval, this is used to configure the map's time slider (I used 1 second) and make sure the right layer is selected.</p>
 
-							<p><img alt="" src="assets/images/animation2.png"></p>
-
+							<figure>
+								<img alt="" src="assets/images/animation2.png">
+								<figcaption>Fig.2 - ArcGIS Pro animation tab.</figcaption>
+							</figure>	
+							<br>
 							<p style="text-align:justify;"> After adding the time slider one can configure what information is to be shown in the map. I decided to add dynamic text that displays the dates. After some more tweaking, the video is ready to be exported.</p>
 
 
